@@ -38,6 +38,21 @@ func NewElasticRepository(url string) (Repository, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// Create the catalog index if it doesn't exist
+	ctx := context.Background()
+	exists, err := client.IndexExists("catalog").Do(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if !exists {
+		_, err := client.CreateIndex("catalog").Do(ctx)
+		if err != nil {
+			return nil, err
+		}
+		log.Println("Created Elasticsearch index: catalog")
+	}
+
 	return &elasticRepository{client}, nil
 }
 

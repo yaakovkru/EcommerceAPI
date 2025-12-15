@@ -1,0 +1,13 @@
+kafka:
+  brokers: ["kafka:9092"]
+
+redpanda:
+  adminApi:
+    enabled: true
+    urls: ["http://kafka:9644"]
+
+server:
+  listenPort: 8080
+  readTimeout: 30s
+  writeTimeout: 30s
+  idleTimeout: 30s
