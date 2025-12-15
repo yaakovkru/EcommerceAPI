@@ -82,7 +82,8 @@ func (server *Server) Account() generated.AccountResolver {
 }
 
 func (server *Server) ToExecutableSchema() graphql.ExecutableSchema {
-	return generated.NewExecutableSchema(generated.Config{
+	config := generated.Config{
 		Resolvers: server,
-	})
+	}
+	return generated.NewExecutableSchema(config)
 }

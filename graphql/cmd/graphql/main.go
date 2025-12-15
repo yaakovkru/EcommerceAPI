@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/gin-gonic/gin"
 	"github.com/rasadov/EcommerceAPI/graphql/config"
@@ -18,9 +17,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	srv := handler.New(server.ToExecutableSchema())
-	srv.AddTransport(transport.POST{})
-	srv.AddTransport(transport.MultipartForm{})
+	// Use NewDefaultServer which enables introspection by default
+	srv := handler.NewDefaultServer(server.ToExecutableSchema())
 
 	engine := gin.Default()
 
