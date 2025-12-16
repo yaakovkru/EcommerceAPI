@@ -84,6 +84,13 @@ services:
       discovery.type: single-node
     volumes:
       - product_db_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
 
   order_db:
     container_name: "order_db"
@@ -137,8 +144,10 @@ services:
       context: .
       dockerfile: docker/services/product.dockerfile
     depends_on:
-      - product_db
-      - kafka
+      product_db:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
     environment:
       DATABASE_URL: http://product_db:9200
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
